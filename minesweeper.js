@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', ()=> {
     const grid = document.querySelector('.grid')
+    const flagsLeft = document.querySelector('#flags-left')
     let width = 10
     let bombAmount = 20
     let flags = 0
+    flagsLeft.innerHTML = bombAmount- flags
     let squares = []
     let isGameOver = false
 
@@ -65,13 +67,13 @@ document.addEventListener('DOMContentLoaded', ()=> {
                 square.classList.add('flag')
                 square.innerHTML = ' 🚩'
                 flags ++
-                // flagsLeft.innerHTML = bombAmount- flags
+                flagsLeft.innerHTML = bombAmount- flags
                 checkForWin()
             } else {
                 square.classList.remove('flag')
                 square.innerHTML = ''
                 flags --
-                // flagsLeft.innerHTML = bombAmount- flags
+                flagsLeft.innerHTML = bombAmount- flags
             }
         }
     }
@@ -79,13 +81,17 @@ document.addEventListener('DOMContentLoaded', ()=> {
     function click(square){
         let currentId = square.id
         if(isGameOver) return
-        if(square.classList.contains('checked') || square.classList.contains('flasg')) return
+        if(square.classList.contains('checked') || square.classList.contains('flags')) return
         if(square.classList.contains('bomb')){
             gameOver(square)
         }else{
             let total = square.getAttribute('data')
             if(total!=0){
                 square.classList.add('checked')
+                if (total == 1) square.classList.add('one')
+                if (total == 2) square.classList.add('two')
+                if (total == 3) square.classList.add('three')
+                if (total == 4) square.classList.add('four')
                 square.innerHTML = total
                 return
             }
@@ -143,12 +149,14 @@ document.addEventListener('DOMContentLoaded', ()=> {
     }
 
     function gameOver(square){
-        console.log('BOOM! Game Over!')
+        result.innerHTML = 'GAME OVER!'
         isGameOver = true
 
         squares.forEach(square => {
             if(square.classList.contains('bomb')){
                 square.innerHTML = '💣'
+                square.classList.remove('bomb')
+                square.classList.add('checked')
             }
         })
     }
@@ -161,7 +169,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
                 matches++
             }
             if(matches === bombAmount){
-                console.log('YOU WIN!')
+                result.innerHTML = 'YOU WIN!'
                 isGameOver = true
             }
         }
